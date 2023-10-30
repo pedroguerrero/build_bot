@@ -1,14 +1,17 @@
+import jimp from 'jimp';
 import {
   CacheType,
   Attachment,
-  EmbedBuilder,
+  AttachmentBuilder,
   CommandInteractionOption,
   ChatInputCommandInteraction,
 } from 'discord.js';
+import { generatePath } from './path';
 import { Tag } from '../entities/tag.entity';
+import { Upload } from '../enums/upload.enum';
 import { AutoComplete } from '../interfaces/autocomplete.interface';
 import { SaveBuildAttributes } from '../enums/save-build-attributes.enum';
-import { Response } from '../enums/response.enum';
+import { ImageOpts } from '../enums/image-opts.enum';
 
 interface ISaveBuildAttributes {
   file: Attachment;
@@ -95,20 +98,32 @@ export const embedBuildsFromTags = async (
   tag: Tag
 ): Promise<void> => {
   const ids: number[] = [];
-  const embedBuilds = tag.builds
-    .filter(({ id }) => {
-      if (ids.indexOf(id) === -1) {
-        ids.push(id);
+  const embedBuilds = tag.builds.filter(({ id }) => {
+    if (ids.indexOf(id) === -1) {
+      ids.push(id);
 
-        return true;
-      }
+      return true;
+    }
 
-      return false;
-    })
-    .map(({ name, img }) => {
-      return new EmbedBuilder().setTitle(name).setImage(img);
-    });
+    return false;
+  });
+  const allEmbedBuilds: AttachmentBuilder[] = [];
 
-  await interaction.channel?.send({ embeds: embedBuilds });
-  await interaction.reply(Response.GET_BUILDS);
+  for (const { id } of embedBuilds) {
+    const buildImagePath = generatePath(
+      __dirname,
+      '..',
+      Upload.DIRECTORY,
+      id.toString()
+    );
+    const img = (await jimp.read(buildImagePath))
+      .resize(ImageOpts.RESOLUTION, jimp.AUTO)
+      .quality(ImageOpts.SIZE);
+    const fileContent = await img.getBufferAsync(img.getMIME());
+    const attachment = new AttachmentBuilder(fileContent);
+
+    allEmbedBuilds.push(attachment);
+  }
+
+  await interaction.editReply({ files: allEmbedBuilds });
 };

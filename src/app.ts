@@ -62,9 +62,14 @@ client.on(
       return;
     }
 
+    await interaction.deferReply({
+      fetchReply: true,
+    });
+
     try {
       await runCommand(interaction);
     } catch (error) {
+      console.log(error);
       await showError(interaction, Response.COMMAND_RUN_ERROR);
     }
   }

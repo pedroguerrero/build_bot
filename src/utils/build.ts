@@ -1,12 +1,16 @@
+import jimp from 'jimp';
 import { EmbedBuilder } from '@discordjs/builders';
 import {
   CacheType,
+  AttachmentBuilder,
   CommandInteractionOption,
   ChatInputCommandInteraction,
 } from 'discord.js';
+import { generatePath } from './path';
 import { Tag } from '../entities/tag.entity';
+import { Upload } from '../enums/upload.enum';
 import { Build } from '../entities/build.entity';
-import { Response } from '../enums/response.enum';
+import { ImageOpts } from '../enums/image-opts.enum';
 import { SubCommands } from '../enums/sub-commands.enum';
 import { AutoComplete } from '../interfaces/autocomplete.interface';
 
@@ -59,12 +63,24 @@ export const buildEmbed = async (
   interaction: ChatInputCommandInteraction<CacheType>,
   build: Build
 ): Promise<void> => {
-  const embedBuild = new EmbedBuilder()
-    .setTitle(build.name)
-    .setImage(build.img);
+  const buildImagePath = generatePath(
+    __dirname,
+    '..',
+    Upload.DIRECTORY,
+    build.id.toString()
+  );
+  const embedBuild = new EmbedBuilder().setTitle(build.name);
 
-  await interaction.channel?.send({ embeds: [embedBuild] });
-  await interaction.reply(Response.GET_BUILDS);
+  const img = (await jimp.read(buildImagePath))
+    .resize(ImageOpts.RESOLUTION, jimp.AUTO)
+    .quality(ImageOpts.SIZE);
+  const fileContent = await img.getBufferAsync(img.getMIME());
+  const attachment = new AttachmentBuilder(fileContent);
+
+  await interaction.editReply({
+    embeds: [embedBuild],
+    files: [attachment],
+  });
 };
 
 export const getDataFromSubCommand = (

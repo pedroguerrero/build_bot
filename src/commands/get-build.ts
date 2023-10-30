@@ -76,7 +76,5 @@ export default {
 
       return;
     }
-
-    interaction.reply(Response.DEFAULT);
   },
 };

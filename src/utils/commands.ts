@@ -7,10 +7,10 @@ import { Like } from 'typeorm';
 import { getTagsAutoComplete } from './tags';
 import { getBuildsAutoComplete } from './build';
 import { Command } from '../enums/commands.enum';
+import { Response } from '../enums/response.enum';
 import { getAutoCompleteData } from './auto-complete';
 import { SubCommands } from '../enums/sub-commands.enum';
 import { availableCommands, commands } from '../commands';
-import { Response } from '../enums/response.enum';
 
 export const hasCommand = (commandName: string): boolean => {
   return availableCommands.indexOf(commandName) !== -1;
@@ -59,8 +59,7 @@ export const showError = async (
   interaction: ChatInputCommandInteraction<CacheType>,
   message: string
 ): Promise<void> => {
-  await interaction.reply({
+  await interaction.editReply({
     content: message,
-    ephemeral: true,
   });
 };
