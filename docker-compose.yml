@@ -10,6 +10,8 @@ services:
       - DATABASE_USERNAME=CHANGE_ME
       - DATABASE_PASSWORD=CHANGE_ME
       - DATABASE_NAME=CHANGE_ME
+    volumes:
+      - ./volumes/build-img:/app/dist/upload
   db:
     image: postgres
     restart: always
@@ -19,3 +21,4 @@ services:
       - POSTGRES_PASSWORD=CHANGE_ME
     volumes:
       - ./db-scripts:/docker-entrypoint-initdb.d
+      - ./volumes/db-data:/var/lib/postgresql/data
