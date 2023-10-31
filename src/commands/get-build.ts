@@ -3,13 +3,10 @@ import {
   SlashCommandBuilder,
   ChatInputCommandInteraction,
 } from 'discord.js';
-import { showError } from '../utils/commands';
 import { Command } from '../enums/commands.enum';
-import { Response } from '../enums/response.enum';
-import { isStringNumber } from '../utils/validation';
+import { getDataFromSubCommand } from '../utils/build';
 import { SubCommands } from '../enums/sub-commands.enum';
-import { embedBuildsFromTags, getAllTags } from '../utils/tags';
-import { buildEmbed, getBuilds, getDataFromSubCommand } from '../utils/build';
+import { getBuildByName, getBuildByTag } from '../utils/get-build';
 
 export default {
   data: new SlashCommandBuilder()
@@ -45,34 +42,11 @@ export default {
     const { name, tag } = getDataFromSubCommand(interaction);
 
     if (name) {
-      const value = name.value?.toString() as string;
-
-      if (!isStringNumber(value)) {
-        showError(interaction, Response.UNKNOWN_BUILD);
-
-        return;
-      }
-
-      const [build] = await getBuilds({ where: { id: Number(value) } });
-
-      await buildEmbed(interaction, build);
+      getBuildByName(interaction, name);
 
       return;
     } else if (tag) {
-      const value = tag.value?.toString() as string;
-
-      if (!isStringNumber(value)) {
-        showError(interaction, Response.UNKNOWN_BUILD);
-
-        return;
-      }
-
-      const [tagRecord] = await getAllTags({
-        where: { id: Number(value) },
-        relations: ['builds'],
-      });
-
-      await embedBuildsFromTags(interaction, tagRecord);
+      getBuildByTag(interaction, tag);
 
       return;
     }
