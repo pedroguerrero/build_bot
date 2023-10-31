@@ -29,6 +29,19 @@ interface GetDataFromSubCommand {
   tag: CommandInteractionOption<CacheType> | null;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const evaluateSaveError = (name: string, error: any): void => {
+  if (
+    error instanceof QueryFailedError &&
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (error as any).code === DbErrors.DUPLICATE_KEY
+  ) {
+    throw new RepeatedBuildException(`${name}: repeated build`);
+  }
+
+  throw error;
+};
+
 export const saveBuild = async ({
   name,
   tags,
@@ -39,19 +52,11 @@ export const saveBuild = async ({
 
   try {
     await newBuild.save();
-
-    return newBuild;
   } catch (error) {
-    if (
-      error instanceof QueryFailedError &&
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (error as any).code === DbErrors.DUPLICATE_KEY
-    ) {
-      throw new RepeatedBuildException(`${name}: repeated build`);
-    }
-
-    throw error;
+    evaluateSaveError(name, error);
   }
+
+  return newBuild;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

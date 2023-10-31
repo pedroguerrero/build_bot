@@ -4,13 +4,17 @@ import { generatePath } from './path';
 import { Upload } from '../enums/upload.enum';
 
 export const fileExist = async (path: string): Promise<boolean> => {
+  let exist: boolean;
+
   try {
     await fs.stat(path);
 
-    return true;
+    exist = true;
   } catch (error) {
-    return false;
+    exist = false;
   }
+
+  return exist;
 };
 
 export const downloadAndSave = async (

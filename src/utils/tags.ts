@@ -22,12 +22,11 @@ interface ISaveBuildAttributes {
 
 export const getTags = (
   tags: CommandInteractionOption<CacheType> | null,
-): string[] => {
-  return tags?.value
+): string[] =>
+  tags?.value
     ?.toString()
     .split(/\s+/)
     .map((tag) => tag.trim().toLowerCase()) as string[];
-};
 
 export const getSaveBuildAttributes = (
   interaction: ChatInputCommandInteraction<CacheType>,

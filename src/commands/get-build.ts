@@ -43,12 +43,8 @@ export default {
 
     if (name) {
       await getBuildByName(interaction, name);
-
-      return;
     } else if (tag) {
       await getBuildByTag(interaction, tag);
-
-      return;
     }
   },
 };

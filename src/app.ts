@@ -70,7 +70,7 @@ client.on(
     try {
       await runCommand(interaction);
     } catch (error) {
-      console.log((error as Error).message);
+      console.error((error as Error).message);
 
       if (error instanceof RepeatedBuildException) {
         await showError(interaction, error.message);
