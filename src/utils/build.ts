@@ -48,7 +48,7 @@ export const getBuilds = async (filter = {}): Promise<Build[]> => {
 
 export const getBuildsAutoComplete = async (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  filter: any
+  filter: any,
 ): Promise<AutoComplete[]> => {
   const builds = await getBuilds(filter);
 
@@ -60,13 +60,13 @@ export const getBuildsAutoComplete = async (
 
 export const buildEmbed = async (
   interaction: ChatInputCommandInteraction<CacheType>,
-  build: Build
+  build: Build,
 ): Promise<void> => {
   let buildImagePath = generatePath(
     __dirname,
     '..',
     Upload.DIRECTORY,
-    build.id.toString()
+    build.id.toString(),
   );
   const embedBuild = new EmbedBuilder().setTitle(build.name);
   const exist = await fileExist(buildImagePath);
@@ -76,7 +76,7 @@ export const buildEmbed = async (
       __dirname,
       '..',
       ImageOpts.ASSETS,
-      ImageOpts.NOT_FOUND
+      ImageOpts.NOT_FOUND,
     );
   }
 
@@ -93,7 +93,7 @@ export const buildEmbed = async (
 };
 
 export const getDataFromSubCommand = (
-  interaction: ChatInputCommandInteraction<CacheType>
+  interaction: ChatInputCommandInteraction<CacheType>,
 ): GetDataFromSubCommand => {
   const name = interaction.options.get(SubCommands.NAME);
   const tag = interaction.options.get(SubCommands.TAG);

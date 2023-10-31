@@ -21,7 +21,7 @@ interface ISaveBuildAttributes {
 }
 
 export const getTags = (
-  tags: CommandInteractionOption<CacheType> | null
+  tags: CommandInteractionOption<CacheType> | null,
 ): string[] => {
   return tags?.value
     ?.toString()
@@ -30,16 +30,16 @@ export const getTags = (
 };
 
 export const getSaveBuildAttributes = (
-  interaction: ChatInputCommandInteraction<CacheType>
+  interaction: ChatInputCommandInteraction<CacheType>,
 ): ISaveBuildAttributes => {
   const file = interaction.options.getAttachment(
-    SaveBuildAttributes.ATTACH
+    SaveBuildAttributes.ATTACH,
   ) as Attachment;
   const buildName = interaction.options.get(
-    SaveBuildAttributes.BUILD_NAME
+    SaveBuildAttributes.BUILD_NAME,
   ) as CommandInteractionOption<CacheType>;
   const tags = interaction.options.get(
-    SaveBuildAttributes.TAGS
+    SaveBuildAttributes.TAGS,
   ) as CommandInteractionOption<CacheType>;
 
   return {
@@ -54,7 +54,7 @@ export const getTagNames = (tags: Tag[]): string[] =>
 
 export const getNonRepeated = (
   allData: string[],
-  searchData: string[]
+  searchData: string[],
 ): string[] => searchData.filter((s) => allData.indexOf(s) === -1);
 
 export const getRepeated = (allData: Tag[], searchData: string[]): Tag[] =>
@@ -84,7 +84,7 @@ export const getAllTags = async (filter = {}): Promise<Tag[]> => {
 
 export const getTagsAutoComplete = async (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  filter: any
+  filter: any,
 ): Promise<AutoComplete[]> => {
   const tags = await getAllTags(filter);
 
@@ -96,7 +96,7 @@ export const getTagsAutoComplete = async (
 
 export const embedBuildsFromTags = async (
   interaction: ChatInputCommandInteraction<CacheType>,
-  tag: Tag
+  tag: Tag,
 ): Promise<void> => {
   const ids: number[] = [];
   const embedBuilds = tag.builds.filter(({ id }) => {
@@ -115,7 +115,7 @@ export const embedBuildsFromTags = async (
       __dirname,
       '..',
       Upload.DIRECTORY,
-      id.toString()
+      id.toString(),
     );
 
     const exist = await fileExist(buildImagePath);
@@ -125,7 +125,7 @@ export const embedBuildsFromTags = async (
         __dirname,
         '..',
         ImageOpts.ASSETS,
-        ImageOpts.NOT_FOUND
+        ImageOpts.NOT_FOUND,
       );
     }
 

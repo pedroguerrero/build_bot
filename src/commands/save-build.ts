@@ -29,23 +29,23 @@ export default {
       option
         .setName(SaveBuildAttributes.ATTACH)
         .setDescription(SaveBuildAttributes.ATTACH_DESCRIPTION)
-        .setRequired(true)
+        .setRequired(true),
     )
     .addStringOption((option) =>
       option
         .setName(SaveBuildAttributes.BUILD_NAME)
         .setDescription(SaveBuildAttributes.BUILD_NAME_DESCRIPTION)
-        .setRequired(true)
+        .setRequired(true),
     )
     .addStringOption((option) =>
       option
         .setName(SaveBuildAttributes.TAGS)
         .setRequired(true)
-        .setDescription(SaveBuildAttributes.TAGS_DESCRIPTION)
+        .setDescription(SaveBuildAttributes.TAGS_DESCRIPTION),
     ),
 
   async execute(
-    interaction: ChatInputCommandInteraction<CacheType>
+    interaction: ChatInputCommandInteraction<CacheType>,
   ): Promise<void> {
     const {
       file,
@@ -77,7 +77,7 @@ export default {
       __dirname,
       '..',
       Upload.DIRECTORY,
-      createdBuild.id.toString()
+      createdBuild.id.toString(),
     );
 
     await fs.writeFile(filename, imageBuff);

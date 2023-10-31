@@ -52,7 +52,7 @@ client.on(
     } catch (error) {
       console.error(error);
     }
-  }
+  },
 );
 
 client.on(
@@ -72,7 +72,7 @@ client.on(
       console.log(error);
       await showError(interaction, Response.COMMAND_RUN_ERROR);
     }
-  }
+  },
 );
 
 client.login(TOKEN);

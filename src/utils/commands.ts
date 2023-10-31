@@ -17,7 +17,7 @@ export const hasCommand = (commandName: string): boolean => {
 };
 
 export const runCommand = async (
-  interaction: ChatInputCommandInteraction<CacheType>
+  interaction: ChatInputCommandInteraction<CacheType>,
 ): Promise<void> => {
   const commandName = interaction.commandName as keyof typeof commands;
 
@@ -31,7 +31,7 @@ export const runCommand = async (
 };
 
 export const runAutoComplete = async (
-  interaction: AutocompleteInteraction<CacheType>
+  interaction: AutocompleteInteraction<CacheType>,
 ): Promise<void> => {
   const { commandName, subCommand, textValue } =
     getAutoCompleteData(interaction);
@@ -57,7 +57,7 @@ export const runAutoComplete = async (
 
 export const showError = async (
   interaction: ChatInputCommandInteraction<CacheType>,
-  message: string
+  message: string,
 ): Promise<void> => {
   await interaction.editReply({
     content: message,

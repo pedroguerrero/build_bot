@@ -7,7 +7,7 @@ interface GetAutoCompleteData {
 }
 
 export const getAutoCompleteData = (
-  interaction: AutocompleteInteraction<CacheType>
+  interaction: AutocompleteInteraction<CacheType>,
 ): GetAutoCompleteData => {
   const { commandName } = interaction;
   const subCommand = interaction.options.getSubcommand();

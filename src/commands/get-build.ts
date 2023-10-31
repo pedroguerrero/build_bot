@@ -24,8 +24,8 @@ export default {
             .setName(SubCommands.NAME)
             .setDescription(SubCommands.NAME_AUTOCOMPLETE_DESCRIPTION)
             .setAutocomplete(true)
-            .setRequired(true)
-        )
+            .setRequired(true),
+        ),
     )
     .addSubcommand((subcommand) =>
       subcommand
@@ -36,11 +36,11 @@ export default {
             .setName(SubCommands.TAG)
             .setDescription(SubCommands.TAG_AUTOCOMPLETE_DESCRIPTION)
             .setAutocomplete(true)
-            .setRequired(true)
-        )
+            .setRequired(true),
+        ),
     ),
   async execute(
-    interaction: ChatInputCommandInteraction<CacheType>
+    interaction: ChatInputCommandInteraction<CacheType>,
   ): Promise<void> {
     const { name, tag } = getDataFromSubCommand(interaction);
 
