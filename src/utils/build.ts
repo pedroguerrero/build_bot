@@ -1,4 +1,5 @@
 import jimp from 'jimp';
+import { QueryFailedError } from 'typeorm';
 import { EmbedBuilder } from '@discordjs/builders';
 import {
   CacheType,
@@ -11,9 +12,11 @@ import { generatePath } from './path';
 import { Tag } from '../entities/tag.entity';
 import { Upload } from '../enums/upload.enum';
 import { Build } from '../entities/build.entity';
+import { DbErrors } from '../enums/db-errors.enum';
 import { ImageOpts } from '../enums/image-opts.enum';
 import { SubCommands } from '../enums/sub-commands.enum';
 import { AutoComplete } from '../interfaces/autocomplete.interface';
+import { RepeatedBuildException } from '../exceptions/repeated-build.exception';
 
 interface CreateBuild {
   name: string;
@@ -34,9 +37,21 @@ export const saveBuild = async ({
   newBuild.name = name;
   newBuild.tags = tags;
 
-  await newBuild.save();
+  try {
+    await newBuild.save();
 
-  return newBuild;
+    return newBuild;
+  } catch (error) {
+    if (
+      error instanceof QueryFailedError &&
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (error as any).code === DbErrors.DUPLICATE_KEY
+    ) {
+      throw new RepeatedBuildException(`${name}: repeated build`);
+    }
+
+    throw error;
+  }
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

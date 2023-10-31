@@ -1,13 +1,9 @@
-import axios from 'axios';
-import * as fs from 'fs/promises';
 import {
   CacheType,
   SlashCommandBuilder,
   ChatInputCommandInteraction,
 } from 'discord.js';
 import { saveBuild } from '../utils/build';
-import { generatePath } from '../utils/path';
-import { Upload } from '../enums/upload.enum';
 import { Command } from '../enums/commands.enum';
 import { Response } from '../enums/response.enum';
 import { SaveBuildAttributes } from '../enums/save-build-attributes.enum';
@@ -20,6 +16,7 @@ import {
   getNonRepeated,
   getSaveBuildAttributes,
 } from '../utils/tags';
+import { downloadAndSave } from '../utils/file';
 
 export default {
   data: new SlashCommandBuilder()
@@ -69,17 +66,6 @@ export default {
 
     await interaction.editReply(Response.BUILD_SAVED);
 
-    const { data: imageBuff } = await axios.get(file.url, {
-      responseType: 'arraybuffer',
-    });
-
-    const filename = generatePath(
-      __dirname,
-      '..',
-      Upload.DIRECTORY,
-      createdBuild.id.toString(),
-    );
-
-    await fs.writeFile(filename, imageBuff);
+    await downloadAndSave(createdBuild.id.toString(), file.url);
   },
 };

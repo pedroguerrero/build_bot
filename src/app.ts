@@ -13,6 +13,7 @@ import {
 import { AppDataSource } from './data-source';
 import { Response } from './enums/response.enum';
 import { runAutoComplete, runCommand, showError } from './utils/commands';
+import { RepeatedBuildException } from './exceptions/repeated-build.exception';
 
 const {
   env: { TOKEN },
@@ -69,7 +70,14 @@ client.on(
     try {
       await runCommand(interaction);
     } catch (error) {
-      console.log(error);
+      console.log((error as Error).message);
+
+      if (error instanceof RepeatedBuildException) {
+        await showError(interaction, error.message);
+
+        return;
+      }
+
       await showError(interaction, Response.COMMAND_RUN_ERROR);
     }
   },

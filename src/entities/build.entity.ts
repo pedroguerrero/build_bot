@@ -15,7 +15,7 @@ export class Build extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column()
+  @Column({ unique: true })
   name!: string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

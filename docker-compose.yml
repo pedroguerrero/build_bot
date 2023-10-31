@@ -22,4 +22,3 @@ services:
       - DATABASE_NAME=CHANGE_ME
     volumes:
       - ./volumes/build-img:/app/dist/upload
-
