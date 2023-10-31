@@ -9,6 +9,7 @@ COPY package.json .
 COPY package-lock.json .
 COPY .env .
 COPY --chown=app:app --from=base /app/dist /app/dist
+COPY --chown=app:app src/assets /app/dist/assets
 RUN adduser -h /tmp -s /sbin/nologin -D -H -u 1001 app && \
   mkdir /app/dist/upload && \
   chown -R app:app /app
