@@ -6,6 +6,7 @@ import {
   CommandInteractionOption,
   ChatInputCommandInteraction,
 } from 'discord.js';
+import { fileExist } from './file';
 import { generatePath } from './path';
 import { Tag } from '../entities/tag.entity';
 import { Upload } from '../enums/upload.enum';
@@ -27,12 +28,10 @@ interface GetDataFromSubCommand {
 
 export const saveBuild = async ({
   name,
-  fileUrl,
   tags,
 }: CreateBuild): Promise<Build> => {
   const newBuild = new Build();
   newBuild.name = name;
-  newBuild.img = fileUrl;
   newBuild.tags = tags;
 
   await newBuild.save();
@@ -63,13 +62,23 @@ export const buildEmbed = async (
   interaction: ChatInputCommandInteraction<CacheType>,
   build: Build
 ): Promise<void> => {
-  const buildImagePath = generatePath(
+  let buildImagePath = generatePath(
     __dirname,
     '..',
     Upload.DIRECTORY,
     build.id.toString()
   );
   const embedBuild = new EmbedBuilder().setTitle(build.name);
+  const exist = await fileExist(buildImagePath);
+
+  if (!exist) {
+    buildImagePath = generatePath(
+      __dirname,
+      '..',
+      ImageOpts.ASSETS,
+      ImageOpts.NOT_FOUND
+    );
+  }
 
   const img = (await jimp.read(buildImagePath))
     .resize(ImageOpts.RESOLUTION, jimp.AUTO)

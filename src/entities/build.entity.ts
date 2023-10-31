@@ -18,9 +18,6 @@ export class Build extends BaseEntity {
   @Column()
   name!: string;
 
-  @Column()
-  img!: string;
-
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   @ManyToMany((type) => Tag, (tag) => tag.builds, {
     eager: true,

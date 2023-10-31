@@ -6,6 +6,7 @@ import {
   CommandInteractionOption,
   ChatInputCommandInteraction,
 } from 'discord.js';
+import { fileExist } from './file';
 import { generatePath } from './path';
 import { Tag } from '../entities/tag.entity';
 import { Upload } from '../enums/upload.enum';
@@ -110,12 +111,24 @@ export const embedBuildsFromTags = async (
   const allEmbedBuilds: AttachmentBuilder[] = [];
 
   for (const { id } of embedBuilds) {
-    const buildImagePath = generatePath(
+    let buildImagePath = generatePath(
       __dirname,
       '..',
       Upload.DIRECTORY,
       id.toString()
     );
+
+    const exist = await fileExist(buildImagePath);
+
+    if (!exist) {
+      buildImagePath = generatePath(
+        __dirname,
+        '..',
+        ImageOpts.ASSETS,
+        ImageOpts.NOT_FOUND
+      );
+    }
+
     const img = (await jimp.read(buildImagePath))
       .resize(ImageOpts.RESOLUTION, jimp.AUTO)
       .quality(ImageOpts.SIZE);
