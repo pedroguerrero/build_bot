@@ -2,5 +2,8 @@ node_modules
 dist
 .env
 src/upload/*
-volumes/*
 !.gitignore
+volumes/build-img/*
+!volumes/build-img/.gitignore
+volumes/db-data/*
+!volumes/db-data/.gitignore
