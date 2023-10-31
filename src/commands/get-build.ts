@@ -42,11 +42,11 @@ export default {
     const { name, tag } = getDataFromSubCommand(interaction);
 
     if (name) {
-      getBuildByName(interaction, name);
+      await getBuildByName(interaction, name);
 
       return;
     } else if (tag) {
-      getBuildByTag(interaction, tag);
+      await getBuildByTag(interaction, tag);
 
       return;
     }
